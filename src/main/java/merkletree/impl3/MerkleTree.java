@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by abhilashk.cse@gmail.com on 20-06-2016.
- * Simple implementation of Merkle Tree in Java using Generics
- */
 
 public class MerkleTree<T> {
 
@@ -42,7 +38,6 @@ public class MerkleTree<T> {
                 right = data.get(i);
             }
 
-            /* Code to demonstrate the use of Java 8 Lambda expression */
             Hash<T> hash = (l, r) -> {
                 if(l instanceof Integer && r instanceof Integer)
                     return (T) (Integer) ((Integer)l + (Integer) r);

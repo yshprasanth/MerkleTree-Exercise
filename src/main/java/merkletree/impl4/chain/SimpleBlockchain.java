@@ -53,14 +53,15 @@ public class SimpleBlockchain<T extends Tx> {
 
 	public boolean validate() {
 
-		String previousHash = chain.get(0).getHash();
+		String previousBlockHash = chain.get(0).getHash();
 		for (Block<T> block : chain) {
-			String currentHash = block.getHash();
-			if (!currentHash.equals(previousHash)) {
+			String currentBlockHash = block.getHash();
+			String currentBlockPreviousHash = "root".equals(block.getPreviousHash())? block.getHash():block.getPreviousHash();
+			if (!currentBlockPreviousHash.equals(previousBlockHash)) {
 				return false;
 			}
 
-			previousHash = currentHash;
+			previousBlockHash = currentBlockHash;
 
 		}
 

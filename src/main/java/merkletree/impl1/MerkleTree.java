@@ -3,11 +3,7 @@ package merkletree.impl1;
 import java.security.MessageDigest;
 import java.util.List;
 
-/**
- * Represents a binary Merkle Tree. This consists of two child nodes, and a 
- * hash representing those two child nodes. The children can either be leaf nodes
- * that contain data blocks, or can themselves be Merkle Trees. 
- */
+
 public class MerkleTree
 {	
 	// Child trees
@@ -24,13 +20,7 @@ public class MerkleTree
 	// The digest algorithm
 	private final MessageDigest md;
 	
-	/**
-	 * Generates a digest for the specified leaf node.
-	 * 
-	 * @param leaf The leaf node
-	 * 
-	 * @return The digest generated from the leaf
-	 */
+
 	private byte[] digest(Leaf leaf)
 	{
 		final List<byte[]> dataBlock = leaf.getDataBlock();
@@ -48,23 +38,13 @@ public class MerkleTree
 		return (digest);
 	}
 	
-	/**
-	 * Initialises an empty Merkle Tree using the specified
-	 * digest algorithm.
-	 * 
-	 * @param md The message digest algorithm to be used by the tree
-	 */
+
 	public MerkleTree(MessageDigest md)
 	{
 		this.md = md;
 	}
 	
-	/**
-	 * Adds two child subtrees to this Merkle Tree.
-	 * 
-	 * @param leftChild The left child tree
-	 * @param rightChild The right child tree
-	 */
+
 	public void add(final MerkleTree leftTree, final MerkleTree rightTree)
 	{
 		this.leftTree = leftTree;
@@ -77,12 +57,6 @@ public class MerkleTree
 		digest = md.digest(rightTree.digest());
 	}
 	
-	/**
-	 * Adds two child leaves to this Merkle Tree.
-	 * 
-	 * @param leftChild The left child leaf
-	 * @param rightChild The right child leaf
-	 */
 	public void add(final Leaf leftLeaf, final Leaf rightLeaf)
 	{
 		this.leftLeaf = leftLeaf;
@@ -95,57 +69,36 @@ public class MerkleTree
 		digest = md.digest(digest(rightLeaf));
 	}
 	
-	/**
-	 * @return The left child tree if there is one, else returns <code>null</code>
-	 */
+
 	public MerkleTree leftTree()
 	{
 		return (leftTree);
 	}
 	
-	/**
-	 * @return The right child tree if there is one, else returns <code>null</code>
-	 */
+
 	public MerkleTree rightTree()
 	{
 		return (rightTree);
 	}
 
-	/**
-	 * @return The left child leaf if there is one, else returns <code>null</code>
-	 */
+
 	public Leaf leftLeaf()
 	{
 		return (leftLeaf);
 	}
 	
-	/**
-	 * @return The right child leaf if there is one, else returns <code>null</code>
-	 */
+
 	public Leaf rightLeaf()
 	{
 		return (rightLeaf);
 	}
 	
-	/**
-	 * @return The digest associate with the root node of this
-	 * Merkle Tree
-	 */
+
 	public byte[] digest() 
 	{
 		return (digest);
 	}
-	
-	/**
-	 * Returns a string representation of the specified
-	 * byte array, with the values represented in hex. The
-	 * values are comma separated and enclosed within square
-	 * brackets.
-	 * 
-	 * @param array The byte array
-	 * 
-	 * @return Bracketed string representation of hex values
-	 */
+
 	private String toHexString(final byte[] array)
 	{
 		final StringBuilder str = new StringBuilder();
@@ -179,12 +132,7 @@ public class MerkleTree
 		return(str.toString());
 	}
 	
-	/**
-	 * Private version of prettyPrint in which the number
-	 * of spaces to indent the tree are specified
-	 * 
-	 * @param indent The number of spaces to indent
-	 */
+
 	private void prettyPrint(final int indent)
 	{
 		for(int idx=0; idx<indent; idx++)
@@ -223,9 +171,7 @@ public class MerkleTree
 		}
 	}
 	
-	/**
-	 * Formatted print out of the contents of the tree
-	 */
+
 	public void prettyPrint()
 	{
 		// Pretty print the tree, starting with zero indent

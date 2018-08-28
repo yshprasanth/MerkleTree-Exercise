@@ -1,34 +1,36 @@
 buildscript {
-
+    ext {
+        springBootVersion = '2.0.4.RELEASE'
+    }
     repositories {
         mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.blockchain'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 10
 
 sourceSets {
-
     main {
         java {
             srcDirs = ["src/main"]
         }
     }
-
     test {
         java {
             srcDirs = ["src/test"]
         }
     }
-
 }
-
-
-
-group = 'com.blockchain'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 10
 
 repositories {
     mavenCentral()
@@ -36,9 +38,10 @@ repositories {
 
 
 dependencies {
-    compile('junit:junit:4.12')
+    compile('org.springframework.boot:spring-boot-starter')
     compile('com.google.code.gson:gson:2.8.2')
     compile('com.google.guava:guava:26.0-jre')
+
     testImplementation('junit:junit:4.12')
 }
 

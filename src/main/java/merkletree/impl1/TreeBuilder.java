@@ -5,18 +5,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Test class to build and print a Merkle Tree.
- */
+
 public class TreeBuilder 
 {
-	/**
-	 * Main method creates a simple Merkle Tree consisting of 
-	 * two subtrees, each with two leaf nodes, each of these consisting
-	 * of two data blocks. Then pretty prints the tree to show its structure.
-	 * 
-	 * @param noargs
-	 */
+
 	public static void main(String[] noargs) 
 	{
 		// Define the message digest algorithm to use

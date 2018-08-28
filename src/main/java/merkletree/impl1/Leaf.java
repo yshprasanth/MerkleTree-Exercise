@@ -2,45 +2,25 @@ package merkletree.impl1;
 
 import java.util.List;
 
-/**
- * Represents a Merkle Tree leaf, consisting of a list
- * of blocks of arbitrary data. The arbitrary data in each block
- * is represented as a byte array.
- */
+
 public class Leaf
 {
 	// The data to be stored in this node
 	private final List<byte[]> dataBlock;
 	
-	/**
-	 * Initialises the leaf node, which consists
-	 * of the specified block of data.
-	 * 
-	 * @param dataBlock Data block to be placed in the leaf node
-	 */
+
 	public Leaf(final List<byte[]> dataBlock)
 	{
 		this.dataBlock = dataBlock;
 	}
 	
-	/**
-	 * @return The data block associated with this leaf node
-	 */
+
 	public List<byte[]> getDataBlock()
 	{
 		return (dataBlock);
 	}
 
-	/**
-	 * Returns a string representation of the specified
-	 * byte array, with the values represented in hex. The
-	 * values are comma separated and enclosed within square
-	 * brackets.
-	 * 
-	 * @param array The byte array
-	 * 
-	 * @return Bracketed string representation of hex values
-	 */
+
 	private String toHexString(final byte[] array)
 	{
 		final StringBuilder str = new StringBuilder();
@@ -74,9 +54,7 @@ public class Leaf
 		return(str.toString());
 	}
 	
-	/**
-	 * Returns a string representation of the data block
-	 */
+
 	public String toString()
 	{
 		final StringBuilder str = new StringBuilder();

@@ -14,27 +14,58 @@ public class SimpleChainTest {
 
 		SimpleBlockchain<Transaction> chain1 = new SimpleBlockchain<Transaction>();
 
-		chain1.add(new Transaction("A")).add(new Transaction("B")).add(new Transaction("C"));
+		chain1.add(new Transaction("A"))
+			.add(new Transaction("B"))
+			.add(new Transaction("C"))
+			.add(new Transaction("C1"))
+			.add(new Transaction("C2"))
+			.add(new Transaction("C3"))
+			.add(new Transaction("C4"))
+			.add(new Transaction("C5"))
+			.add(new Transaction("C6"))
+			.add(new Transaction("C7"))
+			.add(new Transaction("C8"))
+			.add(new Transaction("C11"))
+			.add(new Transaction("C12"))
+			.add(new Transaction("C13"))
+			.add(new Transaction("C14"))
+			.add(new Transaction("C15"))
+			.add(new Transaction("C16"))
+			.add(new Transaction("C17"))
+			.add(new Transaction("C18"))
+			.add(new Transaction("C21"))
+			.add(new Transaction("C22"))
+			.add(new Transaction("C23"))
+			.add(new Transaction("C24"))
+			.add(new Transaction("C25"))
+			.add(new Transaction("C26"))
+			.add(new Transaction("C27"))
+			.add(new Transaction("C28"));
 
 		SimpleBlockchain<Transaction> chain2 = chain1.Clone();
 
+		System.out.println(String.format("After Cloning, Chain 1 Hash: %s", chain1.getHead().getHash()));
+		System.out.println(String.format("After Cloning, Chain 2 Hash: %s", chain2.getHead().getHash()));
+		System.out.println(
+				String.format("After Cloning, Chains Are In Sync: %s", chain1.getHead().getHash().equals(chain2.getHead().getHash())));
+
 		chain1.add(new Transaction("D"));
 
-		System.out.println(String.format("Chain 1 Hash: %s", chain1.getHead().getHash()));
-		System.out.println(String.format("Chain 2 Hash: %s", chain2.getHead().getHash()));
+		System.out.println(String.format("After adding a new txn to Chain 1, Chain 1 Hash: %s", chain1.getHead().getHash()));
+		System.out.println(String.format("After adding a new txn to Chain 1, Chain 2 Hash: %s", chain2.getHead().getHash()));
 		System.out.println(
-				String.format("Chains Are In Sync: %s", chain1.getHead().getHash().equals(chain2.getHead().getHash())));
+				String.format("After adding a new txn to Chain 1, Chains Are In Sync: %s", chain1.getHead().getHash().equals(chain2.getHead().getHash())));
 
 		chain2.add(new Transaction("D"));
 
-		System.out.println(String.format("Chain 1 Hash: %s", chain1.getHead().getHash()));
-		System.out.println(String.format("Chain 2 Hash: %s", chain2.getHead().getHash()));
+		System.out.println(String.format("After adding a new txn to Chain 2, Chain 1 Hash: %s", chain1.getHead().getHash()));
+		System.out.println(String.format("After adding a new txn to Chain 2, Chain 2 Hash: %s", chain2.getHead().getHash()));
 		System.out.println(
-				String.format("Chains Are In Sync: %s", chain1.getHead().getHash().equals(chain2.getHead().getHash())));
+				String.format("After adding a new txn to Chain 2, Chains Are In Sync: %s", chain1.getHead().getHash().equals(chain2.getHead().getHash())));
 
 		assertTrue(chain1.blockChainHash().equals(chain2.blockChainHash()));
 
-		System.out.println("Current Chain Head Transactions: ");
+		System.out.println("Current Chain 1 Head Transactions: ");
 		for (Block block : chain1.chain) {
 			for (Object tx : block.getTransactions()) {
 				System.out.println("\t" + tx);
@@ -97,7 +128,7 @@ public class SimpleChainTest {
 			miner.mine(new Transaction("" + i));
 		}
 
-		System.out.println("Number of Blocks Mined = " + chain.getChain().size());
+		System.out.println("Number of Blocks   = " + chain.getChain().size());
 		assertTrue(chain.getChain().size() == 3);
 
 	}
