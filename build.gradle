@@ -1,0 +1,49 @@
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceSets {
+
+    main {
+        java {
+            srcDirs = ["src/main"]
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ["src/test"]
+        }
+    }
+
+}
+
+
+
+group = 'com.blockchain'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 10
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile('junit:junit:4.12')
+    compile('com.google.code.gson:gson:2.8.2')
+    compile('com.google.guava:guava:26.0-jre')
+    testImplementation('junit:junit:4.12')
+}
+
+test {
+    useJUnit()
+
+    maxHeapSize = '1G'
+}
