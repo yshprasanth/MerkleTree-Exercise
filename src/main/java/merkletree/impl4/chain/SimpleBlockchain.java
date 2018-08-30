@@ -7,26 +7,26 @@ import java.util.function.Predicate;
 
 public class SimpleBlockchain<T extends Tx> {
 	public static final int BLOCK_SIZE = 10;
-	public List<Block<T>> chain = new ArrayList<Block<T>>();
+	public List<Block<T>> blocks = new ArrayList<Block<T>>();
 
 	public SimpleBlockchain() {
 		// create genesis block
-		chain.add(newBlock());
+		blocks.add(newBlock());
 	}
 
 	public SimpleBlockchain(List<Block<T>> blocks) {
 		this();
-		chain = blocks;
+		this.blocks = blocks;
 	}
 
 	public Block<T> getHead() {
 
 		Block<T> result = null;
-		if (this.chain.size() > 0) {
-			result = this.chain.get(this.chain.size() - 1);
+		if (this.blocks.size() > 0) {
+			result = this.blocks.get(this.blocks.size() - 1);
 		} else {
 
-			throw new RuntimeException("No Block's have been added to chain...");
+			throw new RuntimeException("No Block's have been added to blocks...");
 		}
 
 		return result;
@@ -36,8 +36,8 @@ public class SimpleBlockchain<T extends Tx> {
 
 		// compare previous block hash back to genesis hash
 		Block<T> current = block;
-		for (int i = chain.size() - 1; i >= 0; i--) {
-			Block<T> b = chain.get(i);
+		for (int i = blocks.size() - 1; i >= 0; i--) {
+			Block<T> b = blocks.get(i);
 			if (b.getHash().equals(current.getPreviousHash())) {
 				current = b;
 			} else {
@@ -47,14 +47,14 @@ public class SimpleBlockchain<T extends Tx> {
 
 		}
 
-		this.chain.add(block);
+		this.blocks.add(block);
 
 	}
 
 	public boolean validate() {
 
-		String previousBlockHash = chain.get(0).getHash();
-		for (Block<T> block : chain) {
+		String previousBlockHash = blocks.get(0).getHash();
+		for (Block<T> block : blocks) {
 			String currentBlockHash = block.getHash();
 			String currentBlockPreviousHash = "root".equals(block.getPreviousHash())? block.getHash():block.getPreviousHash();
 			if (!currentBlockPreviousHash.equals(previousBlockHash)) {
@@ -70,7 +70,7 @@ public class SimpleBlockchain<T extends Tx> {
 	}
 
 	public Block<T> newBlock() {
-		int count = chain.size();
+		int count = blocks.size();
 		String previousHash = "root";
 
 		if (count > 0)
@@ -86,14 +86,14 @@ public class SimpleBlockchain<T extends Tx> {
 
 	public SimpleBlockchain<T> add(T item) {
 
-		if (chain.size() == 0) {
+		if (blocks.size() == 0) {
 			// genesis block
-			this.chain.add(newBlock());
+			this.blocks.add(newBlock());
 		}
 
 		// See if head block is full
 		if (getHead().getTransactions().size() >= BLOCK_SIZE) {
-			this.chain.add(newBlock());
+			this.blocks.add(newBlock());
 		}
 
 		getHead().add(item);
@@ -104,24 +104,24 @@ public class SimpleBlockchain<T extends Tx> {
 	/* Deletes the index of the after. */
 	public void DeleteAfterIndex(int index) {
 		if (index >= 0) {
-			Predicate<Block<T>> predicate = b -> chain.indexOf(b) >= index;
-			chain.removeIf(predicate);
+			Predicate<Block<T>> predicate = b -> blocks.indexOf(b) >= index;
+			blocks.removeIf(predicate);
 		}
 	}
 
-	public SimpleBlockchain<T> Clone() {
+	public SimpleBlockchain<T> cloneChain() {
 		List<Block<T>> clonedChain = new ArrayList<Block<T>>();
-		Consumer<Block> consumer = (b) -> clonedChain.add(b.Clone());
-		chain.forEach(consumer);
+		Consumer<Block> consumer = (b) -> clonedChain.add(b.cloneBlock());
+		blocks.forEach(consumer);
 		return new SimpleBlockchain<T>(clonedChain);
 	}
 
-	public List<Block<T>> getChain() {
-		return chain;
+	public List<Block<T>> getBlocks() {
+		return blocks;
 	}
 
-	public void setChain(List<Block<T>> chain) {
-		this.chain = chain;
+	public void setBlocks(List<Block<T>> blocks) {
+		this.blocks = blocks;
 	}
 
 	/* Gets the root hash. */

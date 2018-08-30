@@ -42,7 +42,7 @@ public class SimpleChainTest {
 			.add(new Transaction("C27"))
 			.add(new Transaction("C28"));
 
-		SimpleBlockchain<Transaction> chain2 = chain1.Clone();
+		SimpleBlockchain<Transaction> chain2 = chain1.cloneChain();
 
 		System.out.println(String.format("After Cloning, Chain 1 Hash: %s", chain1.getHead().getHash()));
 		System.out.println(String.format("After Cloning, Chain 2 Hash: %s", chain2.getHead().getHash()));
@@ -66,7 +66,7 @@ public class SimpleChainTest {
 		assertTrue(chain1.blockChainHash().equals(chain2.blockChainHash()));
 
 		System.out.println("Current Chain 1 Head Transactions: ");
-		for (Block block : chain1.chain) {
+		for (Block block : chain1.blocks) {
 			for (Object tx : block.getTransactions()) {
 				System.out.println("\t" + tx);
 			}
@@ -75,10 +75,9 @@ public class SimpleChainTest {
 		// Block Merkle root should equal root hash in Merkle Tree computed from
 		// block transactions
 		Block headBlock = chain1.getHead();
-		List<Transaction> merkleTree = headBlock.merkleTree();
-		assertTrue(headBlock.getMerkleRoot().equals(merkleTree.get(merkleTree.size() - 1)));
+		assertTrue(headBlock.getMerkleRoot().equals(headBlock.getMerkleRootTxn().hash()));
 
-		// Validate block chain
+		// Validate block blocks
 		assertTrue(chain1.validate());
 		System.out.println(String.format("Chain is Valid: %s", chain1.validate()));
 
@@ -87,16 +86,14 @@ public class SimpleChainTest {
 	@Test
 	public void merkleTreeTest() {
 
-		// create chain, add transaction
+		// create blocks, add transaction
 
 		SimpleBlockchain<Transaction> chain1 = new SimpleBlockchain<Transaction>();
 
 		chain1.add(new Transaction("A")).add(new Transaction("B")).add(new Transaction("C")).add(new Transaction("D"));
 
-		// get a block in chain
+		// get a block in blocks
 		Block<Transaction> block = chain1.getHead();
-
-		System.out.println("Merkle Hash tree :" + block.merkleTree());
 
 		// get a transaction from block
 		Transaction tx = block.getTransactions().get(0);
@@ -116,7 +113,7 @@ public class SimpleChainTest {
 	@Test
 	public void blockMinerTest() {
 
-		// create 30 transactions, that should result in 3 blocks in the chain.
+		// create 30 transactions, that should result in 3 blocks in the blocks.
 		SimpleBlockchain<Transaction> chain = new SimpleBlockchain<Transaction>();
 
 		// Respresents a proof of work miner
@@ -128,8 +125,8 @@ public class SimpleChainTest {
 			miner.mine(new Transaction("" + i));
 		}
 
-		System.out.println("Number of Blocks   = " + chain.getChain().size());
-		assertTrue(chain.getChain().size() == 3);
+		System.out.println("Number of Blocks   = " + chain.getBlocks().size());
+		assertTrue(chain.getBlocks().size() == 3);
 
 	}
 
@@ -137,20 +134,20 @@ public class SimpleChainTest {
 	public void testValidateBlockchain() {
 
 		SimpleBlockchain<Transaction> chain = new SimpleBlockchain<Transaction>();	
-		// add 30 transaction should result in 3 blocks in chain.
+		// add 30 transaction should result in 3 blocks in blocks.
 		for (int i = 0; i < 30 ; i++) {
 	   	       chain.add(new Transaction("tx:"+i));
 		}
 		
-		// is chain valid 
+		// is blocks valid
 		System.out.println(String.format("Chain is Valid: %s", chain.validate()));
 
-        // get second block from chain and add a tx..		
-		Block<Transaction> block = chain.getChain().get(1);  
+        // get second block from blocks and add a tx..
+		Block<Transaction> block = chain.getBlocks().get(1);
 		Transaction tx = new Transaction("X");
 		block.add(tx);
 		
-		// is chain valid, should not be changed a block... 
+		// is blocks valid, should not be changed a block...
 		System.out.println(String.format("Chain is Valid: %s", chain.validate()));
 	
 	

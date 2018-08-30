@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class Block<T extends Tx> {
+public class Block<T extends Tx> implements Cloneable{
 	public long timeStamp;
 	private int index;
 	private List<T> transactions = new ArrayList<T>();
@@ -17,6 +17,7 @@ public class Block<T extends Tx> {
 	private String previousHash;
 	private String merkleRoot;
 	private String nonce = "0000";
+	private Tx merkleRootTxn;
 	
 	// caches Transaction SHA256 hashes
     public Map<String,T> map = new HashMap<String,T>();
@@ -30,14 +31,17 @@ public class Block<T extends Tx> {
 	}
 	
 
-	public void computeMerkleRoot() {		
-		List<String> treeList = merkleTree();
+	public void computeMerkleRoot() {
+        this.merkleRootTxn = merkleTreeView();
 		// Last element is the merkle root hash if transactions
-		setMerkleRoot(treeList.get(treeList.size()-1) );		
+		setMerkleRoot(merkleRootTxn.hash());
 	}
-	
-	
-	public Block<T> Clone() {
+
+    public Tx getMerkleRootTxn() {
+        return merkleRootTxn;
+    }
+
+    public Block<T> cloneBlock() {
 		// Object serialized then rehydrated into a new instance of an object so
 		// memory conflicts don't happen
 		// There are more efficent ways but this is the most reaadable
@@ -58,20 +62,51 @@ public class Block<T extends Tx> {
 
 	public boolean transasctionsValid()  {
 		
-		List<String> tree = merkleTree();
-		String root = tree.get(tree.size() -1 );
+		Tx merkleRoot = merkleTreeView();
+		String root = merkleRoot.hash();
 		return root.equals(this.getMerkleRoot());
 		
 	}
 
-	public List<String> merkleTree() {
-		ArrayList<String> tree = new ArrayList<>();
+//	public List<String> merkleTree() {
+//		ArrayList<String> tree = new ArrayList<>();
+//		// add all transactions as leaves of the tree.
+//		for (T t : transactions) {
+//			tree.add(t.hash());
+//		}
+//		int levelOffset = 0; // first level
+//
+//		// Iterate through each level, stopping when we reach the root (levelSize
+//		// == 1).
+//		for (int levelSize = transactions.size(); levelSize > 1; levelSize = (levelSize + 1) / 2) {
+//			// For each pair of nodes on that level:
+//			for (int left = 0; left < levelSize; left += 2) {
+//				// The right hand node can be the same as the left hand, in the
+//				// case where we don't have enough
+//				// transactions.
+//				int right = Math.min(left + 1, levelSize - 1);
+//				String tleft = tree.get(levelOffset + left);
+//				String tright = tree.get(levelOffset + right);
+//				tree.add(SHA256.generateHash(tleft + tright));
+//			}
+//			// Move to the next level.
+//			levelOffset += levelSize;
+//		}
+//		return tree;
+//	}
+
+	private Tx merkleTreeView() {
+	    if(transactions.size()==1){
+	        return DerivedTransaction.from(transactions.get(0));
+        }
+
+		ArrayList<Tx> tree = new ArrayList<>();
 		// add all transactions as leaves of the tree.
 		for (T t : transactions) {
-			tree.add(t.hash());
+			tree.add(t);
 		}
 		int levelOffset = 0; // first level
-								
+
 		// Iterate through each level, stopping when we reach the root (levelSize
 		// == 1).
 		for (int levelSize = transactions.size(); levelSize > 1; levelSize = (levelSize + 1) / 2) {
@@ -80,15 +115,19 @@ public class Block<T extends Tx> {
 				// The right hand node can be the same as the left hand, in the
 				// case where we don't have enough
 				// transactions.
-				int right = Math.min(left + 1, levelSize - 1);
-				String tleft = tree.get(levelOffset + left);
-				String tright = tree.get(levelOffset + right);
-				tree.add(SHA256.generateHash(tleft + tright));
+
+				Tx tleft = tree.get(levelOffset + left);
+                Tx tright = null;
+                if(left+1<=levelSize-1) {
+                    int right = Math.min(left + 1, levelSize - 1);
+                    tright = tree.get(levelOffset + right);
+                }
+				tree.add(new DerivedTransaction(tleft, tright));
 			}
 			// Move to the next level.
 			levelOffset += levelSize;
 		}
-		return tree;
+		return tree.get(tree.size()-1);
 	}
 
 	public void computeHash() {
